@@ -1,19 +1,15 @@
 from decimal import Decimal, getcontext
 
-# Устанавливаем точность для Decimal
 getcontext().prec = 35
 
-# Исходная строка
 text = "александровгеоргийолегович"
 
-# Шаг 1: Подсчет частот символов
 def calculate_frequencies(s):
     frequencies = {}
     for char in s:
         frequencies[char] = frequencies.get(char, 0) + 1
     return frequencies
 
-# Шаг 2: Построение таблицы вероятностей
 def build_probability_table(frequencies, total_length):
     probability_table = {}
     cumulative_probability = Decimal(0)
@@ -23,7 +19,6 @@ def build_probability_table(frequencies, total_length):
         cumulative_probability += prob
     return probability_table
 
-# Шаг 3: Арифметическое кодирование
 def arithmetic_encoding(s, probability_table):
     left = Decimal(0)
     right = Decimal(1)
@@ -35,7 +30,6 @@ def arithmetic_encoding(s, probability_table):
         print(f"Символ: {char}, Левая граница: {left}, Правая граница: {right}")
     return left, right
 
-# Шаг 4: Вычисление q и двоичных границ
 def calculate_q_and_binary(left, right):
     interval_width = right - left
     q = (-interval_width.ln() / Decimal(2).ln()).quantize(Decimal('1'), rounding="ROUND_CEILING")
@@ -43,7 +37,6 @@ def calculate_q_and_binary(left, right):
     scaled_right = (right * (Decimal(2) ** q)).quantize(Decimal('1'), rounding="ROUND_DOWN")
     return q, scaled_left, scaled_right
 
-# Основной процесс
 frequencies = calculate_frequencies(text)
 probability_table = build_probability_table(frequencies, len(text))
 
@@ -56,6 +49,7 @@ left, right = arithmetic_encoding(text, probability_table)
 
 q, scaled_left, scaled_right = calculate_q_and_binary(left, right)
 
-
 print(f"q = {q}")
 print("Границы для p:", left*Decimal(2)**q, right*Decimal(2)**q)
+
+
